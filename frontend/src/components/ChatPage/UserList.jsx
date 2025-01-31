@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/UserList.css';
+import '../../styles/userList.css';
 
 const UserList = ({ onSelectUser, currentChat }) => {
   const [users, setUsers] = useState([]);

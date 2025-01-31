@@ -9,10 +9,8 @@ const Home = ({ socket }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Listen for login error from socket
     socket.on('loginError', (data) => {
       setError(data.message);
-      // Clear stored data if login is rejected
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('userName');
       sessionStorage.removeItem('previousMessages');
@@ -46,12 +44,11 @@ const Home = ({ socket }) => {
         throw new Error(data.error || 'Authentication failed');
       }
 
-      // Store auth token and username
       sessionStorage.setItem('token', data.token);
       sessionStorage.setItem('userName', data.username);
 
-      // Fetch previous messages with auth token
       try {
+       // https://chatproject-production-212c.up.railway.app/
         const messagesResponse = await fetch('http://localhost:4000/api/messages', {
           headers: {
             'Authorization': `Bearer ${data.token}`
@@ -71,13 +68,11 @@ const Home = ({ socket }) => {
         sessionStorage.setItem('previousMessages', JSON.stringify([]));
       }
 
-      // Emit new user event
       socket.emit('newUser', { userName: data.username, socketID: socket.id });
       
-      // Don't navigate immediately, wait for potential loginError
       setTimeout(() => {
         if (!sessionStorage.getItem('token')) {
-          return; // Don't navigate if token was cleared due to loginError
+          return; 
         }
         navigate('/chat');
       }, 100);
