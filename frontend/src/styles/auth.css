@@ -1,0 +1,91 @@
+/* Authentication Styles */
+.home__container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  animation: fadeInScale 0.4s ease-out;
+}
+
+.home__header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  animation: slideDown 0.4s ease-out;
+}
+
+.home__header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.username__input,
+.password__input {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 8px 0 20px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  animation: slideUp 0.4s ease-out;
+}
+
+.username__input:focus,
+.password__input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
+}
+
+.home__cta {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.home__cta:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.home__cta:active {
+  transform: translateY(0);
+}
+
+.auth__switch {
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.auth__switch:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.error__message {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8d7da;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+  animation: shake 0.4s cubic-bezier(0.36, 0, 0.66, -0.56);
+}

@@ -1,0 +1,89 @@
+/* User List Styles */
+.user-list {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.user-list__header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-list__header h3 {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.user-list__item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-list__item:hover {
+  background-color: #f8f9fa;
+}
+
+.user-list__item.active {
+  background-color: #e9ecef;
+}
+
+.user-list__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  margin-right: 12px;
+}
+
+.user-list__info {
+  flex: 1;
+}
+
+.user-list__name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.user-list__lastMessage {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-list__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-list__time {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.user-list__unread {
+  background-color: #007bff;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}

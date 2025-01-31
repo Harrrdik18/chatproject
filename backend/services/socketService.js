@@ -1,29 +1,57 @@
 const { saveMessage } = require('../controllers/messageController');
 
-let users = [];
+const activeUsers = new Map(); 
 
 const setupSocket = (io) => {
   io.on('connection', (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
 
     socket.on('newUser', (data) => {
-      users.push(data);
-      io.emit('newUserResponse', users);
+      activeUsers.set(data.userName, {
+        socketID: socket.id
+      });
+
+      io.emit('newUserResponse', Array.from(activeUsers.keys()).map(userName => ({
+        userName,
+        socketID: activeUsers.get(userName).socketID
+      })));
     });
 
     socket.on('message', async (data) => {
       try {
-        await saveMessage(data);
-        io.emit('messageResponse', data);
+        const savedMessage = await saveMessage(data);
+        const messageToSend = {
+          ...data,
+          _id: savedMessage._id
+        };
+
+        if (data.isPrivate) {
+          const recipientInfo = activeUsers.get(data.recipient);
+          if (recipientInfo) {
+            io.to(recipientInfo.socketID).emit('messageResponse', messageToSend);
+            socket.emit('messageResponse', messageToSend);
+          }
+        } else {
+          io.emit('messageResponse', messageToSend);
+        }
       } catch (error) {
         console.error('Error handling message:', error);
+        socket.emit('messageError', { message: 'Failed to send message' });
       }
     });
 
     socket.on('disconnect', () => {
       console.log('🔥: A user disconnected');
-      users = users.filter((user) => user.socketID !== socket.id);
-      io.emit('newUserResponse', users);
+      for (const [userName, userInfo] of activeUsers.entries()) {
+        if (userInfo.socketID === socket.id) {
+          activeUsers.delete(userName);
+          io.emit('newUserResponse', Array.from(activeUsers.keys()).map(userName => ({
+            userName,
+            socketID: activeUsers.get(userName).socketID
+          })));
+          break;
+        }
+      }
     });
   });
 };

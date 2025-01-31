@@ -4,8 +4,6 @@ import ChatBar from './ChatPage/ChatBar';
 import ChatBody from './ChatPage/ChatBody';
 import ChatFooter from './ChatPage/ChatFooter';
 import UserList from './ChatPage/UserList';
-import './ChatPage/ChatPage.css';
-import './ChatPage/UserList.css';
 
 const ChatPage = ({ socket }) => {
   const navigate = useNavigate();
@@ -34,26 +32,39 @@ const ChatPage = ({ socket }) => {
   };
 
   useEffect(() => {
-    // Check if user is authenticated
     const token = sessionStorage.getItem('token');
     if (!token) {
       navigate('/');
       return;
     }
 
-    // Load messages for current chat
     fetchMessages(currentChat);
 
     const messageHandler = (data) => {
-      // Only add message if it's relevant to current chat
-      if (data.recipient === 'everyone' && currentChat === 'everyone' ||
-          data.sender === currentChat || 
-          (data.recipient === sessionStorage.getItem('userName') && data.sender === currentChat)) {
-        setMessages((prevMessages) => {
-          const newMessages = Array.isArray(prevMessages) ? [...prevMessages] : [];
-          return [...newMessages, data];
-        });
-      }
+      setMessages((prevMessages) => {
+        const messageExists = prevMessages.some(msg => 
+          msg._id === data._id || 
+          (msg.text === data.text && 
+           msg.sender === data.sender && 
+           msg.createdAt === data.createdAt)
+        );
+        
+        if (messageExists) {
+          return prevMessages;
+        }
+
+        const currentUser = sessionStorage.getItem('userName');
+        
+        const isRelevantMessage = 
+          (data.recipient === 'everyone' && currentChat === 'everyone') ||
+          (data.sender === currentChat && data.recipient === currentUser) ||
+          (data.sender === currentUser && data.recipient === currentChat);
+
+        if (isRelevantMessage) {
+          return [...prevMessages, data];
+        }
+        return prevMessages;
+      });
     };
     
     socket.on('messageResponse', messageHandler);
@@ -70,14 +81,19 @@ const ChatPage = ({ socket }) => {
   const handleSendMessage = (messageText) => {
     if (!messageText.trim()) return;
 
+    const currentUser = sessionStorage.getItem('userName');
     const messageData = {
       text: messageText,
-      name: sessionStorage.getItem('userName'),
+      name: currentUser,
+      sender: currentUser,
       socketID: socket.id,
       recipient: currentChat,
-      isPrivate: currentChat !== 'everyone'
+      isPrivate: currentChat !== 'everyone',
+      createdAt: new Date().toISOString()
     };
-
+    
+    setMessages(prevMessages => [...prevMessages, messageData]);
+    
     socket.emit('message', messageData);
   };
 
@@ -97,9 +113,7 @@ const ChatPage = ({ socket }) => {
           messages={messages} 
           currentChat={currentChat}
         />
-        <ChatFooter 
-          onSendMessage={handleSendMessage}
-        />
+        <ChatFooter onSendMessage={handleSendMessage} />
       </div>
     </div>
   );

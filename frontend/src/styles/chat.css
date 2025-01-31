@@ -1,3 +1,4 @@
+/* Chat Layout */
 .chat {
   display: flex;
   height: 100vh;
@@ -10,6 +11,7 @@
   border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
 }
 
 .chat__main {
@@ -20,10 +22,12 @@
   position: relative;
 }
 
+/* Chat Header */
 .chat__header {
   padding: 16px;
   background: #f8f9fa;
   border-bottom: 1px solid #e0e0e0;
+  animation: slideDown 0.3s ease-out;
 }
 
 .chat__header h2 {
@@ -32,6 +36,7 @@
   color: #333;
 }
 
+/* Chat Body */
 .chat__body {
   flex: 1;
   overflow-y: auto;
@@ -39,6 +44,7 @@
   background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
 }
 
 .message__container {
@@ -47,17 +53,22 @@
   padding-bottom: 20px;
 }
 
+/* Messages */
 .message {
   margin-bottom: 16px;
   max-width: 70%;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 .message__left {
   margin-right: auto;
+  animation: slideInLeft 0.3s ease-out forwards;
 }
 
 .message__right {
   margin-left: auto;
+  animation: slideInRight 0.3s ease-out forwards;
 }
 
 .message__sender {
@@ -72,6 +83,11 @@
   border-radius: 12px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   position: relative;
+  transition: transform 0.2s ease;
+}
+
+.message__content:hover {
+  transform: translateY(-1px);
 }
 
 .message__right .message__content {
@@ -85,18 +101,17 @@
   position: absolute;
   bottom: -18px;
   right: 8px;
+  opacity: 0.8;
 }
 
-.message__right .message__time {
-  color: #666;
-}
-
+/* Chat Footer */
 .chat__footer {
   padding: 16px;
   background: white;
   border-top: 1px solid #e0e0e0;
   position: sticky;
   bottom: 0;
+  animation: slideUp 0.3s ease-out;
 }
 
 .form {
@@ -104,26 +119,41 @@
   gap: 8px;
 }
 
-.message {
+.message__input {
   flex: 1;
-  padding: 8px 12px;
+  padding: 12px;
   border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.message__input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+  outline: none;
 }
 
 .sendBtn {
-  padding: 8px 16px;
+  padding: 8px 24px;
   background: #0d6efd;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .sendBtn:hover {
   background: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.sendBtn:active {
+  transform: translateY(0);
 }
 
 /* Scrollbar Styling */
@@ -138,6 +168,7 @@
 .message__container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 3px;
+  transition: background 0.2s ease;
 }
 
 .message__container::-webkit-scrollbar-thumb:hover {

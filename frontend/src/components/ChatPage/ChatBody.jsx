@@ -28,25 +28,28 @@ const ChatBody = ({ messages, currentChat }) => {
       </header>
 
       <div className="message__container">
-        {Array.isArray(messages) && messages.map((message) => (
-          <div
-            key={message._id || `${message.sender}_${message.text}_${Date.now()}`}
-            className={`message ${message.sender === currentUser ? 'message__right' : 'message__left'}`}
-          >
-            <p className="message__sender">
-              {message.sender === currentUser ? 'You' : message.sender}
-            </p>
-            <div className="message__content">
-              <p>{message.text}</p>
-              <span className="message__time">
-                {new Date(message.createdAt || Date.now()).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </span>
+        {Array.isArray(messages) && messages.map((message) => {
+          const sender = message?.sender || currentUser;
+          return (
+            <div
+              key={message._id || `${sender}_${message.text}_${Date.now()}`}
+              className={`message ${(sender || '').toLowerCase() === (currentUser || '').toLowerCase() ? 'message__right' : 'message__left'}`}
+            >
+              <p className="message__sender">
+                {sender === currentUser ? 'You' : sender}
+              </p>
+              <div className="message__content">
+                <p>{message?.text || ''}</p>
+                <span className="message__time">
+                  {new Date(message?.createdAt || Date.now()).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={bottomRef} />
       </div>
     </div>

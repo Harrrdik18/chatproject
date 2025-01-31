@@ -7,7 +7,6 @@ const getMessages = async (req, res) => {
 
     let query = {};
     if (recipient && recipient !== 'everyone') {
-      // Get private messages between two users
       query = {
         $or: [
           { sender: username, recipient: recipient },
@@ -15,7 +14,6 @@ const getMessages = async (req, res) => {
         ]
       };
     } else {
-      // Get group messages
       query = { recipient: 'everyone' };
     }
 
@@ -23,7 +21,7 @@ const getMessages = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(50);
 
-    res.json(messages.reverse()); // Send in chronological order
+    res.json(messages.reverse()); 
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -33,7 +31,6 @@ const getRecentChats = async (req, res) => {
   try {
     const username = req.user.username;
 
-    // Get recent private chats
     const recentChats = await Message.aggregate([
       {
         $match: {

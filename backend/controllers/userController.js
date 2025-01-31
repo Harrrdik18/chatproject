@@ -10,7 +10,6 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: 'Username already exists' });
@@ -53,7 +52,6 @@ const getAllUsers = async (req, res) => {
   try {
     const currentUser = req.user.username;
     
-    // Get all users except current user
     const users = await User.find(
       { username: { $ne: currentUser } },
       { username: 1, _id: 0 }

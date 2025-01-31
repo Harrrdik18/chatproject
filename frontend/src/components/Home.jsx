@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Home = ({ socket }) => {
@@ -7,6 +7,21 @@ const Home = ({ socket }) => {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    // Listen for login error from socket
+    socket.on('loginError', (data) => {
+      setError(data.message);
+      // Clear stored data if login is rejected
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('userName');
+      sessionStorage.removeItem('previousMessages');
+    });
+
+    return () => {
+      socket.off('loginError');
+    };
+  }, [socket]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +74,13 @@ const Home = ({ socket }) => {
       // Emit new user event
       socket.emit('newUser', { userName: data.username, socketID: socket.id });
       
-      navigate('/chat');
+      // Don't navigate immediately, wait for potential loginError
+      setTimeout(() => {
+        if (!sessionStorage.getItem('token')) {
+          return; // Don't navigate if token was cleared due to loginError
+        }
+        navigate('/chat');
+      }, 100);
     } catch (error) {
       setError(error.message);
     }

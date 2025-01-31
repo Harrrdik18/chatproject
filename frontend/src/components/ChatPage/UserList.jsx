@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './UserList.css';
+import '../../styles/UserList.css';
 
 const UserList = ({ onSelectUser, currentChat }) => {
   const [users, setUsers] = useState([]);
@@ -29,7 +29,6 @@ const UserList = ({ onSelectUser, currentChat }) => {
     };
 
     fetchUsers();
-    // Refresh user list every minute
     const interval = setInterval(fetchUsers, 60000);
 
     return () => clearInterval(interval);
@@ -63,7 +62,6 @@ const UserList = ({ onSelectUser, currentChat }) => {
         <h3>Chats</h3>
       </div>
       
-      {/* Group Chat Option */}
       <div 
         className={`user-list__item ${currentChat === 'everyone' ? 'active' : ''}`}
         onClick={() => onSelectUser('everyone')}
@@ -77,7 +75,6 @@ const UserList = ({ onSelectUser, currentChat }) => {
         </div>
       </div>
 
-      {/* User List */}
       {users.map((user) => (
         <div
           key={user.username}
